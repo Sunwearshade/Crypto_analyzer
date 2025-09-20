@@ -34,6 +34,7 @@ bot.on('callback_query', async (query) => {
   for (let i = 0; i < sample.length; i++) {
     const token = sample[i];
     const ev = evaluations[i];
+
     if (ev.status === 'fulfilled') {
       const msgText = formatTokenWithRisk(token, ev.value);
       await bot.sendMessage(query.message.chat.id, msgText, { parse_mode: 'Markdown' });
