@@ -7,7 +7,6 @@ function bucketLiquidity(liq) {
   return 100;
 }
 
-// that function 
 function bucketAgeHours(h) {
   if (h == null) return 80;
   if (h > 24*30) return 10;
@@ -24,11 +23,23 @@ function bucketMomentum(txns) {
   return 35;
 }
 
+// ✅ Versión refinada con escala continua
 function bucketHoldersConcentration(top10Pct) {
   if (top10Pct == null) return 70;
-  if (top10Pct < 0.20) return 20;
-  if (top10Pct < 0.40) return 60;
-  return 100;
+
+  // Limitamos valores extremos
+  const pct = Math.max(0, Math.min(1, top10Pct));
+
+  if (pct <= 0.20) {
+    // Menos de 20% en top 10 → riesgo bajo, entre 20 y 40
+    return 20 + (pct / 0.20) * 20; // 20 → 40
+  } else if (pct <= 0.40) {
+    // Entre 20% y 40% → riesgo medio, entre 40 y 100
+    return 40 + ((pct - 0.20) / 0.20) * 60; // 40 → 100
+  } else {
+    // Más del 40% → riesgo máximo
+    return 100;
+  }
 }
 
 function bucketHoneypotTax(h) {
